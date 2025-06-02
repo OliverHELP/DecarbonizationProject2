@@ -15,12 +15,12 @@ const totalAvailableValueEl = document.getElementById('totalAvailableValue');
 const capacityOwlEmojiEl = document.getElementById('capacityOwlEmoji');
 const capacityOwlTextEl = document.getElementById('capacityOwlText');
 const co2EmissionsValueEl = document.getElementById('co2EmissionsValue');
-const simulationModeBtn = document.getElementById('simulationModeBtn');     // Button to toggle simulation mode
+const simulationModeBtn = document.getElementById('simulationModeBtn');
 
 const circuitsListEl = document.getElementById('circuitsList');
 const addCircuitBtn = document.getElementById('addCircuitBtn');
 const newCircuitNameInput = document.getElementById('newCircuitName');
-const newCircuitIconInput = document.getElementById('newCircuitIcon'); // NEW
+const newCircuitIconInput = document.getElementById('newCircuitIcon');
 const newCircuitDeviceNameInput = document.getElementById('newCircuitDeviceName');
 const newCircuitDeviceWattsInput = document.getElementById('newCircuitDeviceWatts');
 const connectToPrimarySourceSelect = document.getElementById('connectToPrimarySource');
@@ -38,38 +38,20 @@ let nextPowerSourceId = 1;
 let powerSources = [
     { id: 'ps' + nextPowerSourceId++, name: 'Cogen Unit', isOn: true, capacity: 85000, icon: '⚙️', type: 'Cogen', carbonFootprint: 'Medium', co2gPerkWh: 450 },
     { id: 'ps' + nextPowerSourceId++, name: 'Generator', isOn: false, capacity: 50000, icon: '🔋', type: 'Diesel Gen', carbonFootprint: 'High', co2gPerkWh: 750 },
-   
 ];
-let nextCircuitId = 1; // Counter to generate unique IDs for circuits
-let circuits = [ // Array of circuit objects
-    // Each object represents a circuit/zone with its properties:
-    // id: unique identifier
-    // name: display name of the zone
-    // icon: emoji icon for the zone
-    // primarySourceId: ID of the primary power source it's connected to
-    // backupSourceId: ID of the backup power source
-    // currentSourceId: ID of the source currently powering it (null if offline)
-    // devices: array of device objects within this circuit
-    //   - devId: unique ID for the device
-    //   - name: display name of the device
-    //   - icon: emoji icon for the device
-    //   - watts: power consumption in Watts
-    //   - isOn: boolean, true if device is on, false if off
-    // element: (added dynamically) reference to its DOM element
-    { id: 'c' + nextCircuitId++, name: 'Lecture hall', icon: '🖥️', primarySourceId: 'ps1', backupSourceId: 'ps2', currentSourceId: null, devices: [ 
+let nextCircuitId = 1;
+let circuits = [
+    { id: 'c' + nextCircuitId++, name: 'Lecture hall', icon: '🖥️', primarySourceId: 'ps1', backupSourceId: 'ps2', currentSourceId: null, devices: [
         { devId: 'c1-d1', name: 'Lecture utilities ', icon: '🗄️', watts: 1800, isOn: true },
-        
     ]},
-    { id: 'c' + nextCircuitId++, name: 'Office Lighting', icon: '💡', primarySourceId: 'ps3', backupSourceId: 'ps1', currentSourceId: null, devices: [ 
-        { devId: 'c2-d1', name: 'LED Grid', icon: '💡', watts: 3000, isOn: true } 
+    { id: 'c' + nextCircuitId++, name: 'Office Lighting', icon: '💡', primarySourceId: 'ps3', backupSourceId: 'ps1', currentSourceId: null, devices: [
+        { devId: 'c2-d1', name: 'LED Grid', icon: '💡', watts: 3000, isOn: true }
     ]},
     { id: 'c' + nextCircuitId++, name: 'General Outlets', icon: '🔌', primarySourceId: 'ps3', backupSourceId: 'ps1', currentSourceId: null, devices: [
         { devId: 'c3-d1', name: 'Wall Outlets Floor 1', icon: '🔌', watts: 1500, isOn: true },
-        
     ]},
     { id: 'c' + nextCircuitId++, name: 'Elevator System', icon: '↕️', primarySourceId: 'ps1', backupSourceId: 'ps2', currentSourceId: null, devices: [
         { devId: 'c4-d1', name: 'Elevator', icon: '⚙️', watts: 10000, isOn: false },
-    
     ]},
     { id: 'c' + nextCircuitId++, name: 'HVAC System', icon: '💨', primarySourceId: 'ps1', backupSourceId: 'ps2', currentSourceId: null, devices: [
         { devId: 'c5-d1', name: 'Main Heat Pump', icon: '🌡️', watts: 12000, isOn: false },
@@ -78,7 +60,6 @@ let circuits = [ // Array of circuit objects
     { id: 'c' + nextCircuitId++, name: 'Office Computers', icon: '🔥', primarySourceId: 'ps1', backupSourceId: 'ps2', currentSourceId: null, devices: [
         { devId: 'c6-d1', name: 'Workstations(All)', icon: '🔥', watts: 10000, isOn: true }
     ]},
-   
 ];
 
 // --- FUNCTIONS ---
@@ -143,7 +124,7 @@ function addNewPowerSource() {
     if (!name) { alert('Unit Name is required.'); return; }
     if (isNaN(capacity) || capacity <= 0) { alert('Valid Peak Capacity (Watts) is required.'); return; }
     if (isNaN(co2gPerkWh) || co2gPerkWh < 0) { alert('Valid CO2 g/kWh value is required.'); return; }
-    
+
     let carbonFootprintRating = 'N/A';
     if (co2gPerkWh <= 50) carbonFootprintRating = 'Very Low';
     else if (co2gPerkWh <= 200) carbonFootprintRating = 'Low';
@@ -193,18 +174,20 @@ function updateCapacityOwl(currentAvailableCapacity) {
     if (currentAvailableCapacity > 0) {
         utilization = (consumedPower / currentAvailableCapacity) * 100;
     } else if (consumedPower > 0) {
-        utilization = 101;
+        utilization = 101; // Indicate overload if there's consumption but no capacity
     }
 
+
     let owlEmoji = '🙂'; let owlText = 'Monitoring...'; let owlTransform = 'scale(1)';
-    if (utilization <= 5) {
+    if (currentAvailableCapacity === 0 && consumedPower === 0) { // Special case for system completely off
+         owlEmoji = '😴'; owlText = 'System Off';
+    } else if (utilization <= 5) {
         owlEmoji = '🙂'; owlText = 'Relaxed';
-        if (currentAvailableCapacity === 0 && consumedPower === 0) { owlEmoji = '😴'; owlText = 'System Off';}
     } else if (utilization <= 50) {
         owlEmoji = '😀'; owlText = 'Working Steadily'; owlTransform = 'scale(1.05) translateY(-2px)';
     } else if (utilization <= 90) {
         owlEmoji = '😅'; owlText = 'Working Hard!'; owlTransform = 'scale(1.1) translateY(-4px) rotate(2deg)';
-    } else {
+    } else { // utilization > 90
         owlEmoji = '🥵'; owlText = utilization > 100 ? 'Overloaded!' : 'Near Max Capacity!';
         owlTransform = 'scale(1.15) translateY(-5px) rotate(-3deg)';
     }
@@ -220,18 +203,17 @@ function renderCircuits() {
         circuitDiv.className = 'block circuit'; circuitDiv.id = circuit.id;
         circuit.element = circuitDiv;
 
-        // Create header container for icon and title
         const headerDiv = document.createElement('div');
         headerDiv.className = 'circuit-header';
 
         const iconSpan = document.createElement('span');
         iconSpan.className = 'circuit-icon';
-        iconSpan.textContent = circuit.icon || '🏢'; // Default building emoji if none
+        iconSpan.textContent = circuit.icon || '🏢';
 
         const title = document.createElement('h3');
         title.textContent = circuit.name;
 
-        headerDiv.append(iconSpan, title); // Add icon and title to header
+        headerDiv.append(iconSpan, title);
 
         const connectionP = document.createElement('p'); connectionP.className = 'connection-status';
         const removeBtn = document.createElement('button'); removeBtn.textContent = 'Remove Zone';
@@ -247,17 +229,15 @@ function renderCircuits() {
             const switchLabel = document.createElement('label'); switchLabel.className = 'switch';
             const switchInput = document.createElement('input'); switchInput.type = 'checkbox'; switchInput.className = 'device-switch';
             switchInput.checked = device.isOn;
-             // Store device and circuit ID on the switch for easier access in simulation mode
             switchInput.dataset.deviceId = device.devId;
             switchInput.dataset.circuitId = circuit.id;
-
             switchInput.onchange = () => { device.isOn = switchInput.checked; updateCircuitPowerAndDeviceStates(); };
             const sliderSpan = document.createElement('span'); sliderSpan.className = 'slider';
             switchLabel.append(switchInput, sliderSpan);
             deviceDiv.append(iconDiv, deviceNameDiv, powerStatsDiv, switchLabel);
             devicesContainer.appendChild(deviceDiv);
         });
-        circuitDiv.append(headerDiv, connectionP, devicesContainer, removeBtn); // Use headerDiv
+        circuitDiv.append(headerDiv, connectionP, devicesContainer, removeBtn);
         circuitsListEl.appendChild(circuitDiv);
     });
     renderLines();
@@ -265,6 +245,17 @@ function renderCircuits() {
 }
 
 function renderLines() {
+    // --- MOBILE OPTIMIZATION ADDITION ---
+    // Check if the lines container is set to display: none by CSS (our mobile media query does this).
+    // If it is, or if window is very narrow, don't bother calculating/drawing lines.
+    // This complements the CSS hiding by preventing unnecessary JS execution.
+    const linesContainerStyle = window.getComputedStyle(linesContainer);
+    if (linesContainerStyle.display === 'none' || window.innerWidth < 769) { // 769 to match media query + 1
+        linesContainer.innerHTML = ''; // Ensure it's empty if it was hidden then shown by resize
+        return; // Exit early
+    }
+    // --- END MOBILE OPTIMIZATION ADDITION ---
+
     linesContainer.innerHTML = '';
     if (!powerAvailablePanel) return;
     const availablePanelRect = powerAvailablePanel.getBoundingClientRect();
@@ -306,7 +297,7 @@ function togglePowerSource(sourceId) {
         source.isOn = !source.isOn;
         if(source.element) {
             source.element.classList.toggle('off', !source.isOn);
-            const statusP = source.element.querySelector('.sustainability-info + p');
+            const statusP = source.element.querySelector('.sustainability-info + p'); // More robust selector
             if (statusP) statusP.innerHTML = `Status: <strong>${source.isOn ? 'OPERATIONAL' : 'OFFLINE'}</strong>`;
             const toggleBtn = source.element.querySelector('.toggle-power');
             if (toggleBtn) {
@@ -381,7 +372,7 @@ function calculateAndDisplayCO2Emissions() {
 
 function addNewCircuit() {
     const name = newCircuitNameInput.value.trim();
-    const icon = newCircuitIconInput.value.trim() || '🏢'; // Get icon, default 🏢
+    const icon = newCircuitIconInput.value.trim() || '🏢';
     const deviceName = newCircuitDeviceNameInput.value.trim() || 'Default Device';
     const deviceWatts = parseInt(newCircuitDeviceWattsInput.value);
     const primaryId = connectToPrimarySourceSelect.value;
@@ -390,19 +381,19 @@ function addNewCircuit() {
     if (!name) { alert('Zone Name is required.'); return; }
     if (isNaN(deviceWatts) || deviceWatts <= 0) { alert('Valid Initial Device Wattage is required.'); return; }
     if (primaryId && backupId && primaryId === backupId) { alert('Primary and Backup sources cannot be the same.'); return; }
-    
+
     const newDevId = `c${nextCircuitId}-d1`;
     circuits.push({
         id: 'c' + nextCircuitId++,
         name: name,
-        icon: icon, // Store icon
+        icon: icon,
         primarySourceId: primaryId || null,
         backupSourceId: backupId || null,
         currentSourceId: null,
         devices: [ { devId: newDevId, name: deviceName, icon: '⚡', watts: deviceWatts, isOn: false } ]
     });
     newCircuitNameInput.value = '';
-    newCircuitIconInput.value = ''; // Clear icon input
+    newCircuitIconInput.value = '';
     newCircuitDeviceNameInput.value = '';
     newCircuitDeviceWattsInput.value = '';
     connectToPrimarySourceSelect.value = '';
@@ -422,110 +413,74 @@ function debounce(func, wait) {
 const debouncedRenderLines = debounce(renderLines, 100);
 window.addEventListener('resize', debouncedRenderLines);
 
-   // --- SIMULATION MODE ---
-// This section handles the logic for the random simulation mode.
+// --- SIMULATION MODE ---
+let isSimulationModeActive = false;
+let simulationZoneIntervalId = null;
+let simulationGeneratorIntervalId = null;
 
-let isSimulationModeActive = false; // Flag to track if simulation is running
-let simulationZoneIntervalId = null;  // To store the interval ID for zone simulation
-let simulationGeneratorIntervalId = null; // To store the interval ID for generator simulation
+const SIMULATION_ZONE_TOGGLE_CHANCE = 0.3;
+const SIMULATION_DEVICE_ON_CHANCE = 0.5;
+const SIMULATION_GENERATOR_ACTIVE_PROBABILITY = 0.85;
 
-const SIMULATION_ZONE_TOGGLE_CHANCE = 0.3; // 30% chance a circuit's devices will be considered for toggling
-const SIMULATION_DEVICE_ON_CHANCE = 0.5;   // 50% chance a device (in a chosen circuit) will be turned on
-const SIMULATION_GENERATOR_ACTIVE_PROBABILITY = 0.85; // 85% chance a generator will be set to ON
-
-/**
- * Function executed by the zone simulation timer.
- * Randomly toggles the 'isOn' state of devices within circuits.
- */
 function simulateZoneChanges() {
-    if (!isSimulationModeActive) return; // Do nothing if simulation is off
-
-    console.log("SIM: Simulating zone device changes...");
+    if (!isSimulationModeActive) return;
+    // console.log("SIM: Simulating zone device changes..."); // Uncomment for debugging
     circuits.forEach(circuit => {
-        // Only consider toggling devices if the circuit itself is currently powered
-        // and a random chance passes
         if (circuit.currentSourceId && Math.random() < SIMULATION_ZONE_TOGGLE_CHANCE) {
             circuit.devices.forEach(device => {
-                // For each device in the chosen circuit, randomly set its state
                 device.isOn = Math.random() < SIMULATION_DEVICE_ON_CHANCE;
             });
         }
     });
-    // After changing device states in data, update the entire UI
-    // This will re-render switches, update consumption, lines, CO2, owl, etc.
-    updateCircuitPowerAndDeviceStates();
+    updateCircuitPowerAndDeviceStates(); // This will re-render necessary parts including lines (if not hidden)
 }
 
-/**
- * Function executed by the generator simulation timer.
- * Randomly sets the 'isOn' state of power generators.
- */
 function simulateGeneratorChanges() {
-    if (!isSimulationModeActive) return; // Do nothing if simulation is off
-
-    console.log("SIM: Simulating generator state changes...");
+    if (!isSimulationModeActive) return;
+    // console.log("SIM: Simulating generator state changes..."); // Uncomment for debugging
     let changed = false;
     powerSources.forEach(source => {
-        // For each source, decide its new state based on the active probability
         const shouldBeOn = Math.random() < SIMULATION_GENERATOR_ACTIVE_PROBABILITY;
         if (source.isOn !== shouldBeOn) {
-            source.isOn = shouldBeOn; // Directly update the data model
+            source.isOn = shouldBeOn;
             changed = true;
         }
     });
 
     if (changed) {
-        // If any generator states were changed in the data:
-        // 1. Re-render the power sources panel to show their new visual states (on/off, button text).
-        renderPowerSources(); 
-        // 2. Update circuits based on these new generator states. This handles everything else:
-        //    circuit connection status, device switch enabling/disabling, consumption, lines, CO2, owl.
-        updateCircuitPowerAndDeviceStates();
+        renderPowerSources(); // This re-renders sources and calls renderLines
+        updateCircuitPowerAndDeviceStates(); // This updates circuits, consumption, owl, CO2, and calls renderLines
     }
 }
 
-/**
- * Toggles the simulation mode on or off.
- * Starts or stops the simulation timers.
- */
 function toggleSimulationMode() {
-    isSimulationModeActive = !isSimulationModeActive; // Flip the active flag
+    isSimulationModeActive = !isSimulationModeActive;
 
     if (isSimulationModeActive) {
-        console.log("SIM: Simulation Mode STARTED");
+        // console.log("SIM: Simulation Mode STARTED"); // Uncomment for debugging
         simulationModeBtn.textContent = 'Stop Simulation Mode';
-        simulationModeBtn.style.backgroundColor = 'var(--color-button-toggle-off)'; // Red when active
-
-        // Start the zone device simulation timer (every 10 seconds)
-        simulationZoneIntervalId = setInterval(simulateZoneChanges, 500);
-        // Start the generator state simulation timer (every 30 seconds)
-        simulationGeneratorIntervalId = setInterval(simulateGeneratorChanges, 1000);
-
-        // Optionally, run them once immediately
+        simulationModeBtn.style.backgroundColor = 'var(--color-button-toggle-off)';
+        simulationZoneIntervalId = setInterval(simulateZoneChanges, 3000); // Adjusted interval
+        simulationGeneratorIntervalId = setInterval(simulateGeneratorChanges, 7000); // Adjusted interval
         simulateZoneChanges();
         simulateGeneratorChanges();
-
     } else {
-        console.log("SIM: Simulation Mode STOPPED");
+        // console.log("SIM: Simulation Mode STOPPED"); // Uncomment for debugging
         simulationModeBtn.textContent = 'Start Simulation Mode';
-        simulationModeBtn.style.backgroundColor = 'var(--color-button-simulation)'; // Orange when inactive
-
-        // Clear (stop) the simulation timers
+        simulationModeBtn.style.backgroundColor = 'var(--color-button-simulation)';
         clearInterval(simulationZoneIntervalId);
         clearInterval(simulationGeneratorIntervalId);
         simulationZoneIntervalId = null;
         simulationGeneratorIntervalId = null;
     }
 }
-// Attach event listener to the simulation mode button
 simulationModeBtn.addEventListener('click', toggleSimulationMode);
-
 // --- END SIMULATION MODE ---
 
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     setupFormToggles();
-    renderPowerSources(); 
-    renderCircuits();
+    renderPowerSources(); // This will call renderLines
+    renderCircuits();     // This will also call renderLines
 });
