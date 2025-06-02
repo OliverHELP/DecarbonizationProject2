@@ -418,9 +418,9 @@ let isSimulationModeActive = false;
 let simulationZoneIntervalId = null;
 let simulationGeneratorIntervalId = null;
 
-const SIMULATION_ZONE_TOGGLE_CHANCE = 0.3;
-const SIMULATION_DEVICE_ON_CHANCE = 0.5;
-const SIMULATION_GENERATOR_ACTIVE_PROBABILITY = 0.85;
+const SIMULATION_ZONE_TOGGLE_CHANCE = 0.6;
+const SIMULATION_DEVICE_ON_CHANCE = 0.4;
+const SIMULATION_GENERATOR_ACTIVE_PROBABILITY = 0.65;
 
 function simulateZoneChanges() {
     if (!isSimulationModeActive) return;
@@ -460,8 +460,8 @@ function toggleSimulationMode() {
         // console.log("SIM: Simulation Mode STARTED"); // Uncomment for debugging
         simulationModeBtn.textContent = 'Stop Simulation Mode';
         simulationModeBtn.style.backgroundColor = 'var(--color-button-toggle-off)';
-        simulationZoneIntervalId = setInterval(simulateZoneChanges, 3000); // Adjusted interval
-        simulationGeneratorIntervalId = setInterval(simulateGeneratorChanges, 7000); // Adjusted interval
+        simulationZoneIntervalId = setInterval(simulateZoneChanges, 300); // Adjusted interval
+        simulationGeneratorIntervalId = setInterval(simulateGeneratorChanges, 700); // Adjusted interval
         simulateZoneChanges();
         simulateGeneratorChanges();
     } else {
