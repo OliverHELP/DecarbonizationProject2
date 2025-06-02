@@ -1,0 +1,264 @@
+/* --- COLOUR PALETTE VARIABLES (Easy to change!) --- */
+:root {
+    --color-background: #e0f7fa; /* Light Cyan page background */
+    --color-panel-bg: #ffffff;    /* White for main panels */
+    --color-text-dark: #333333;
+    --color-text-medium: #555555;
+    --color-text-light: #777777;
+
+    --color-source-panel-bg: #fffde7; /* Light Yellow for power source panel */
+    --color-source-panel-border: #fdd835; /* Bright Yellow border */
+    --color-source-block-bg: #fff9c4;
+    --color-source-block-border: #fbc02d;
+    --color-source-title: #d84315; /* Deep Orange for source titles */
+    --color-source-icon: #f57f17;
+    --color-source-line-gradient-start: #fdd835;
+    --color-source-line-gradient-mid: #ffb300;
+    --color-source-line-gradient-end: #fdd835;
+
+
+    --color-available-panel-bg: #e1f5fe; /* Light Blue for available power panel */
+    --color-available-panel-border: #4fc3f7; /* Bright Blue border */
+    --color-available-title: #0277bd;
+    --color-available-meter-text: #01579b;
+
+    --color-circuit-panel-bg: #fce4ec; /* Light Pink for circuits panel */
+    --color-circuit-panel-border: #f06292; /* Bright Pink border */
+    --color-circuit-block-bg: #f9f9f9;
+    --color-circuit-block-border: #e8e8e8;
+    --color-circuit-title: #6a1b9a;
+    --color-circuit-icon: #8e24aa; /* Purple for circuit icons */
+    --color-circuit-line-gradient-start: #ffeb3b;
+    --color-circuit-line-gradient-mid: #ffc107;
+    --color-circuit-line-gradient-end: #ffeb3b;
+
+
+    --color-device-block-bg: #dcedc8;
+    --color-device-block-border: #a5d6a7;
+    --color-device-title: #388e3c;
+
+    --color-line-inactive: #78909c; /* Darker Grey Blue for inactive lines */
+    --color-button-toggle-on: #66bb6a;
+    --color-button-toggle-off: #ef5350;
+    --color-button-neutral: #90a4ae;
+    --color-button-remove: #78909c;
+    --color-button-simulation: #ff9800;   /* Orange for simulation button */
+
+    --font-primary: 'Roboto', sans-serif;
+}
+/* --- END COLOUR PALETTE --- */
+
+body {
+    font-family: var(--font-primary);
+    margin: 0; padding: 20px; background-color: var(--color-background);
+    display: flex; justify-content: space-between; min-height: calc(100vh - 40px); gap: 20px;
+}
+
+.panel {
+    background-color: var(--color-panel-bg); padding: 20px; border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow-y: auto; position: relative;
+    display: flex; flex-direction: column;
+}
+.panel h2 {
+    color: var(--color-text-dark); text-align: center; font-weight: 700;
+    border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0;
+    font-size: 1.4em; flex-shrink: 0;
+}
+.panel-content { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+
+.power-sources-panel {
+    width: 30%; background-color: var(--color-source-panel-bg);
+    border-left: 8px solid var(--color-source-panel-border);
+}
+.power-sources-panel h2 { color: var(--color-source-title); }
+
+.power-available-panel {
+    width: 20%; background-color: var(--color-available-panel-bg);
+    border: 5px solid var(--color-available-panel-border);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-around; /* Distribute space for owl */ text-align: center; z-index: 1;
+}
+.power-available-panel h3 { color: var(--color-available-title); font-size: 1.3em; margin-bottom: 5px; font-weight: 700;}
+.power-available-panel .meter-reading {
+    font-size: 1.8em; font-weight: 700; color: var(--color-available-meter-text);
+    padding: 6px 12px; background-color: var(--color-panel-bg);
+    border-radius: 8px; box-shadow: inset 0 0 8px rgba(0,0,0,0.1); margin-bottom: 5px;
+}
+.power-available-panel p.description { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 10px;}
+/* Capacity Owl Styling */
+.capacity-owl-container {
+    margin-top: 10px;
+    text-align: center;
+}
+.capacity-owl {
+    font-size: 3.5em; /* Large owl emoji */
+    display: block;
+    margin-bottom: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+.capacity-owl-status {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--color-available-title);
+}
+/* CO2 Emissions Styling */
+.co2-emissions-info {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-align: center;
+    width: 90%;
+    box-sizing: border-box;
+}
+.co2-emissions-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 0.9em;
+    color: var(--color-text-dark);
+    font-weight: 500;
+}
+.co2-emissions-info p {
+    font-size: 1.0em;
+    font-weight: bold;
+    color: var(--color-text-medium);
+    margin: 0;
+}
+
+
+.circuits-panel {
+    width: 46%; background-color: var(--color-circuit-panel-bg);
+    border-right: 8px solid var(--color-circuit-panel-border);
+}
+.circuits-panel h2 { color: var(--color-circuit-title); }
+
+.block {
+    padding: 12px; margin-bottom: 15px; border-radius: 8px;
+    position: relative; box-shadow: 0 3px 6px rgba(0,0,0,0.07);
+}
+.power-source {
+    background-color: var(--color-source-block-bg); border: 1px solid var(--color-source-block-border);
+}
+.power-source.off { opacity: 0.65; background-color: #eeeeee; }
+.power-source.off h3 { color: var(--color-text-light); }
+.power-source-icon { font-size: 1.8em; display: block; text-align: center; margin-bottom: 3px; color: var(--color-source-icon); }
+.power-source h3 { color: var(--color-source-title); }
+.power-source p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
+.power-source p.capacity-info { font-weight: 500; text-align: center; margin-bottom: 5px;}
+.power-source p.sustainability-info { font-size: 0.8em; color: var(--color-text-dark); text-align: center; font-style: italic; margin-bottom: 8px;}
+
+.circuit {
+    background-color: var(--color-circuit-block-bg); border: 1px solid var(--color-circuit-block-border);
+}
+.circuit .circuit-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.circuit-icon {
+    font-size: 1.5em; /* Slightly larger than device icons */
+    margin-right: 10px;
+    color: var(--color-circuit-icon);
+}
+.circuit h3 {
+    color: var(--color-circuit-title);
+    margin: 0; /* Remove default margin if icon is next to it */
+    flex-grow: 1; /* Allow title to take remaining space */
+}
+.circuit p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
+.circuit p.connection-status strong.backup { color: #ff9800; }
+.circuit p.connection-status strong.offline { color: #f44336; }
+
+button {
+    padding: 8px 15px; border: none; border-radius: 6px; color: white;
+    cursor: pointer; font-size: 0.9em; font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+button:hover { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+button:active { transform: translateY(0px); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+button.toggle-power.on, button.toggle-device.on { background-color: var(--color-button-toggle-on); }
+button.toggle-power.off, button.toggle-device.off { background-color: var(--color-button-toggle-off); }
+button.remove-item { background-color: var(--color-button-remove); margin-left: 8px; }
+button.toggle-form-visibility { background-color: var(--color-button-neutral); width: 100%; margin-bottom: 15px; }
+
+/* --- POWER FLOW LINES --- */
+#linesContainer {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+}
+.flow-line {
+    position: absolute; background-color: var(--color-line-inactive);
+    z-index: 0; overflow: hidden; border-radius: 3px;
+}
+.flow-line::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    animation-duration: 1.8s; animation-iteration-count: infinite; animation-timing-function: linear;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.flow-line.active::before {
+    opacity: 1;
+}
+
+.source-to-available-line { height: 8px; }
+.source-to-available-line.active::before {
+    background: linear-gradient(to right, var(--color-source-line-gradient-start), var(--color-source-line-gradient-mid), var(--color-source-line-gradient-end));
+    animation-name: flowHorizontalToCenter;
+}
+@keyframes flowHorizontalToCenter {
+    0% { transform: translateX(-110%) scaleX(1); } 50% { transform: translateX(0%) scaleX(1.1); } 100% { transform: translateX(110%) scaleX(1); }
+}
+.available-to-circuit-line { height: 9px; }
+.available-to-circuit-line.active::before {
+    background: linear-gradient(to right, var(--color-circuit-line-gradient-start), var(--color-circuit-line-gradient-mid), var(--color-circuit-line-gradient-end));
+    animation-name: flowHorizontalToCircuit;
+}
+ @keyframes flowHorizontalToCircuit {
+    0% { transform: translateX(-110%); } 100% { transform: translateX(110%); }
+}
+/* --- END POWER FLOW LINES --- */
+
+.circuit-devices { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.device {
+    background-color: var(--color-device-block-bg); border: 1px solid var(--color-device-block-border);
+    border-radius: 6px; padding: 10px; text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.85em;
+}
+.device-icon { font-size: 20px; margin-bottom: 4px;}
+.device-name { font-weight: 500; margin-bottom: 4px; color: var(--color-device-title); }
+.device-power-stats { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 6px; font-weight: 500;}
+
+.switch { position: relative; display: inline-block; width: 45px; height: 25px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffccbc; transition: .4s; border-radius: 25px; }
+.slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 0 2px rgba(0,0,0,0.2); }
+input:checked + .slider { background-color: var(--color-button-toggle-on); }
+input:checked + .slider:before { transform: translateX(20px); }
+input:disabled + .slider { background-color: #e0e0e0; cursor: not-allowed; }
+input:disabled + .slider:before { background-color: #f0f0f0; }
+
+.controls-form { margin-top: 10px; padding: 15px; border-radius: 8px; display: none; flex-shrink: 0; }
+.controls-form.visible { display: block; }
+.controls-form h3 { text-align: center; font-size: 1.2em; margin-bottom: 15px;}
+.controls-form label, .controls-form input, .controls-form select { display: block; margin-bottom: 8px; width: calc(100% - 20px); font-size: 0.9em;}
+.controls-form input, .controls-form select { padding: 8px; border-radius: 6px; background-color: white;}
+.controls-form button { display: block; margin: 12px auto 0; }
+
+.add-power-source-controls { border: 1px dashed var(--color-source-panel-border); background-color: var(--color-source-panel-bg); opacity: 0.95; }
+.add-power-source-controls h3 { color: var(--color-source-title); }
+.add-power-source-controls input, .add-power-source-controls select { border: 1px solid var(--color-source-block-border); }
+#addPowerSourceBtn { background-color: var(--color-source-panel-border); color: var(--color-text-dark); }
+
+.add-circuit-controls { border: 1px dashed var(--color-circuit-panel-border); background-color: var(--color-circuit-panel-bg); opacity: 0.95;}
+.add-circuit-controls h3 { color: var(--color-circuit-title); }
+.add-circuit-controls input, .add-circuit-controls select { border: 1px solid var(--color-circuit-panel-border); }
+#addCircuitBtn { background-color: var(--color-circuit-panel-border); }
+
+.power-meter-total {
+    margin-top: 20px; padding: 12px; background-color: #ede7f6;
+    border-radius: 8px; text-align: center; border: 1px solid #d1c4e9;
+    flex-shrink: 0;
+}
+.power-meter-total h3 { margin-top:0; margin-bottom: 6px; font-size: 1.1em; color: #512da8; }
+.meter-reading { font-size: 1.6em; font-weight: 700; color: #4527a0; }
