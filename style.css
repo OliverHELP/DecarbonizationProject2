@@ -1,783 +1,598 @@
 /* --- COLOUR PALETTE VARIABLES (Easy to change!) --- */
+/* :root is a pseudo-class that represents the root element of the document (<html>).
+   CSS custom properties (variables) are defined here for easy theming and maintenance. */
 :root {
+    /* Background and general text colors */
     --color-background: #e0f7fa; /* Light Cyan page background */
     --color-panel-bg: #ffffff;    /* White for main panels */
-    --color-text-dark: #333333;
-    --color-text-medium: #555555;
-    --color-text-light: #777777;
+    --color-text-dark: #333333;   /* Darkest text for headings, important info */
+    --color-text-medium: #555555; /* Medium text for general content */
+    --color-text-light: #777777;  /* Lighter text, often for secondary info or disabled states */
 
-    --color-source-panel-bg: #fffde7; /* Light Yellow for power source panel */
-    --color-source-panel-border: #fdd835; /* Bright Yellow border */
-    --color-source-block-bg: #fff9c4;
-    --color-source-block-border: #fbc02d;
-    --color-source-title: #d84315; /* Deep Orange for source titles */
-    --color-source-icon: #f57f17;
+    /* Power Sources Panel specific colors */
+    --color-source-panel-bg: #fffde7;       /* Background color for the power sources panel */
+    --color-source-panel-border: #fdd835;   /* Border color for the power sources panel */
+    --color-source-block-bg: #fff9c4;       /* Background for individual power source blocks */
+    --color-source-block-border: #fbc02d;   /* Border for individual power source blocks */
+    --color-source-title: #d84315;          /* Text color for titles within the power source panel/blocks */
+    --color-source-icon: #f57f17;           /* Color for icons related to power sources */
+    /* Gradient colors for the animated line from sources to available panel */
     --color-source-line-gradient-start: #fdd835;
     --color-source-line-gradient-mid: #ffb300;
     --color-source-line-gradient-end: #fdd835;
 
+    /* Power Available Panel specific colors */
+    --color-available-panel-bg: #e1f5fe;     /* Background for the power available panel */
+    --color-available-panel-border: #4fc3f7; /* Border for the power available panel */
+    --color-available-title: #0277bd;        /* Text color for titles in the available power panel */
+    --color-available-meter-text: #01579b;   /* Text color for the meter reading in the available power panel */
 
-    --color-available-panel-bg: #e1f5fe; /* Light Blue for available power panel */
-    --color-available-panel-border: #4fc3f7; /* Bright Blue border */
-    --color-available-title: #0277bd;
-    --color-available-meter-text: #01579b;
-
-    --color-circuit-panel-bg: #fce4ec; /* Light Pink for circuits panel */
-    --color-circuit-panel-border: #f06292; /* Bright Pink border */
-    --color-circuit-block-bg: #f9f9f9;
-    --color-circuit-block-border: #e8e8e8;
-    --color-circuit-title: #6a1b9a;
-    --color-circuit-icon: #8e24aa; /* Purple for circuit icons */
+    /* Circuits Panel specific colors */
+    --color-circuit-panel-bg: #fce4ec;        /* Background for the circuits panel */
+    --color-circuit-panel-border: #f06292;    /* Border for the circuits panel */
+    --color-circuit-block-bg: #f9f9f9;        /* Background for individual circuit blocks */
+    --color-circuit-block-border: #e8e8e8;    /* Border for individual circuit blocks */
+    --color-circuit-title: #6a1b9a;           /* Text color for titles within the circuits panel/blocks */
+    --color-circuit-icon: #8e24aa;            /* Color for icons related to circuits */
+    /* Gradient colors for the animated line from available panel to circuits */
     --color-circuit-line-gradient-start: #ffeb3b;
     --color-circuit-line-gradient-mid: #ffc107;
     --color-circuit-line-gradient-end: #ffeb3b;
 
+    /* Device Block specific colors (within circuits) */
+    --color-device-block-bg: #dcedc8;     /* Background for individual device blocks */
+    --color-device-block-border: #a5d6a7; /* Border for individual device blocks */
+    --color-device-title: #388e3c;        /* Text color for device names */
 
-    --color-device-block-bg: #dcedc8;
-    --color-device-block-border: #a5d6a7;
-    --color-device-title: #388e3c;
+    /* Line and Button colors */
+    --color-line-inactive: #78909c;        /* Color for power flow lines when inactive */
+    --color-button-toggle-on: #66bb6a;      /* Background color for 'on' state toggle buttons */
+    --color-button-toggle-off: #ef5350;     /* Background color for 'off' state toggle buttons */
+    --color-button-neutral: #90a4ae;        /* Background for neutral action buttons (e.g., show/hide form) */
+    --color-button-remove: #78909c;         /* Background for remove buttons */
+    --color-button-simulation: #ff9800;     /* Background for the simulation mode button */
 
-    --color-line-inactive: #78909c; /* Darker Grey Blue for inactive lines */
-    --color-button-toggle-on: #66bb6a;
-    --color-button-toggle-off: #ef5350;
-    --color-button-neutral: #90a4ae;
-    --color-button-remove: #78909c;
-    --color-button-simulation: #ff9800;   /* Orange for simulation button */
+    /* Typography */
+    --font-primary: 'Roboto', sans-serif;   /* Primary font family for the page */
 
-    --font-primary: 'Roboto', sans-serif;
+    /* Layout variables (used for height calculations) */
+    --body-padding: 20px;                   /* Padding around the main body content */
+    --body-gap: 20px;                       /* Gap between flex items in the body (panels) */
 }
 /* --- END COLOUR PALETTE --- */
 
+/* --- GENERAL BODY STYLING --- */
 body {
-    font-family: var(--font-primary);
-    margin: 0; padding: 20px; background-color: var(--color-background);
-    display: flex; justify-content: space-between; min-height: calc(100vh - 40px); gap: 20px;
-    box-sizing: border-box; /* Ensures padding doesn't add to total width/height */
+    font-family: var(--font-primary); /* Sets the default font for the entire page */
+    margin: 0;                        /* Removes default browser margins */
+    padding: var(--body-padding);     /* Applies padding around the main content area */
+    background-color: var(--color-background); /* Sets the page background color */
+    display: flex;                    /* Enables Flexbox layout for direct children (the panels) */
+    flex-direction: row;              /* Arranges panels horizontally (side-by-side) by default for desktop */
+    justify-content: space-between;   /* Distributes space between the panels */
+    height: 100vh;                    /* Makes the body take up the full viewport height */
+    overflow: hidden;                 /* Prevents the body itself from scrolling on desktop (panels handle their own scroll) */
+    gap: var(--body-gap);             /* Defines the space between the panels */
+    box-sizing: border-box;           /* Ensures padding and border are included in the element's total width and height */
 }
 
+/* --- PANEL STYLING (Applies to all three main panels) --- */
 .panel {
-    background-color: var(--color-panel-bg); padding: 20px; border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow-y: auto; position: relative;
-    display: flex; flex-direction: column;
+    background-color: var(--color-panel-bg); /* Sets the background color of panels */
+    padding: 20px;                    /* Inner spacing for panel content */
+    border-radius: 12px;              /* Rounds the corners of the panels */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Adds a subtle shadow for a lifted effect */
+    position: relative;               /* Needed for absolute positioning of child elements (like lines if they were inside) */
+    display: flex;                    /* Enables Flexbox for the panel's direct children (header, content area, forms) */
+    flex-direction: column;           /* Stacks panel children (header, content) vertically */
+    box-sizing: border-box;           /* Includes padding and border in the panel's total width and height */
+    /* Calculates the height of each panel to fit within the viewport minus body padding */
+    height: calc(100vh - (2 * var(--body-padding)));
 }
+
+/* Panel Headers (h2 elements inside .panel) */
 .panel h2 {
-    color: var(--color-text-dark); text-align: center; font-weight: 700;
-    border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0;
-    font-size: 1.4em; flex-shrink: 0;
+    color: var(--color-text-dark);    /* Sets the text color for panel titles */
+    text-align: center;               /* Centers the panel title text */
+    font-weight: 700;                 /* Makes the title text bold */
+    border-bottom: 2px solid #e0e0e0; /* Adds a separator line below the title */
+    padding-bottom: 10px;             /* Space between the title text and the separator line */
+    margin-top: 0;                    /* Removes default top margin from h2 */
+    font-size: 1.4em;                 /* Sets the font size of the panel title */
+    flex-shrink: 0;                   /* Prevents the header from shrinking if content is sparse */
 }
-.panel-content { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
 
+/* Panel Content Area (div with class .panel-content) */
+.panel-content {
+    flex-grow: 1;                     /* Allows this area to expand and fill available vertical space in the panel */
+    overflow-y: auto;                 /* Adds a vertical scrollbar ONLY if content exceeds the allocated height */
+    padding-right: 5px;               /* Adds a small padding on the right, often to prevent content from touching a scrollbar */
+}
+
+/* --- PANEL SPECIFIC STYLING (Widths and Borders for Desktop View) --- */
+/* Power Sources Panel */
 .power-sources-panel {
-    width: 30%; background-color: var(--color-source-panel-bg);
-    border-left: 8px solid var(--color-source-panel-border);
+    width: 30%;                       /* Sets the width of this panel on desktop */
+    background-color: var(--color-source-panel-bg); /* Specific background color */
+    border-left: 8px solid var(--color-source-panel-border); /* Distinctive left border */
 }
-.power-sources-panel h2 { color: var(--color-source-title); }
+.power-sources-panel h2 { color: var(--color-source-title); } /* Specific title color */
 
+/* Power Available Panel */
 .power-available-panel {
-    width: 20%; background-color: var(--color-available-panel-bg);
-    border: 5px solid var(--color-available-panel-border);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: space-around; /* Distribute space for owl */ text-align: center; z-index: 1;
+    width: 20%;                       /* Sets the width of this panel on desktop */
+    background-color: var(--color-available-panel-bg); /* Specific background color */
+    border: 5px solid var(--color-available-panel-border); /* Full border around this panel */
+    display: flex;                    /* Overrides general .panel flex for its own content alignment */
+    flex-direction: column;           /* Stacks its children vertically */
+    align-items: center;              /* Centers its children horizontally */
+    text-align: center;               /* Centers text within its children */
+    z-index: 1;                       /* Ensures this panel is above the lines container if they overlap */
 }
-.power-available-panel h3 { color: var(--color-available-title); font-size: 1.3em; margin-bottom: 5px; font-weight: 700;}
-.power-available-panel .meter-reading {
-    font-size: 1.8em; font-weight: 700; color: var(--color-available-meter-text);
-    padding: 6px 12px; background-color: var(--color-panel-bg);
-    border-radius: 8px; box-shadow: inset 0 0 8px rgba(0,0,0,0.1); margin-bottom: 5px;
-}
-.power-available-panel p.description { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 10px;}
-/* Capacity Owl Styling */
-.capacity-owl-container {
-    margin-top: 10px;
-    text-align: center;
-}
-.capacity-owl {
-    font-size: 3.5em; /* Large owl emoji */
-    display: block;
+.power-available-panel h3 { /* Sub-heading within this panel */
+    color: var(--color-available-title);
+    font-size: 1.3em;
     margin-bottom: 5px;
-    transition: transform 0.3s ease-in-out;
+    font-weight: 700;
 }
-.capacity-owl-status {
+.power-available-panel .meter-reading { /* Specific styling for meter reading in this panel */
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-available-meter-text);
+    padding: 6px 12px;
+    background-color: var(--color-panel-bg); /* Uses the general panel background for contrast */
+    border-radius: 8px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.1); /* Inner shadow for a "digital display" look */
+    margin-bottom: 5px;
+}
+.power-available-panel p.description { /* Descriptive text in this panel */
+    font-size: 0.8em;
+    color: var(--color-text-medium);
+    margin-bottom: 10px;
+}
+
+/* Capacity Owl Styling (within Power Available Panel) */
+.capacity-owl-container {
+    margin-top: 10px;                 /* Space above the owl */
+    text-align: center;               /* Centers the owl and its status text */
+}
+.capacity-owl { /* The owl emoji itself */
+    font-size: 3.5em;                 /* Large emoji size */
+    display: block;                   /* Makes it a block element for margin and centering */
+    margin-bottom: 5px;               /* Space below the owl emoji */
+    transition: transform 0.3s ease-in-out; /* Smooth animation for transform changes (e.g., scaling) */
+}
+.capacity-owl-status { /* Text below the owl emoji */
     font-size: 0.9em;
     font-weight: bold;
     color: var(--color-available-title);
 }
-/* CO2 Emissions Styling */
+
+/* CO2 Emissions Info Box (within Power Available Panel) */
 .co2-emissions-info {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    text-align: center;
-    width: 90%;
+    margin-top: 15px;                 /* Space above the CO2 info box */
+    padding: 10px;                    /* Inner spacing */
+    background-color: #f8f9fa;        /* Light grey background for differentiation */
+    border: 1px solid #dee2e6;        /* Subtle border */
+    border-radius: 6px;               /* Rounded corners */
+    text-align: center;               /* Center content */
+    width: 90%;                       /* Takes 90% of its parent's width */
     box-sizing: border-box;
 }
-.co2-emissions-info h4 {
+.co2-emissions-info h4 { /* Title for CO2 info */
     margin: 0 0 5px 0;
     font-size: 0.9em;
     color: var(--color-text-dark);
     font-weight: 500;
 }
-.co2-emissions-info p {
+.co2-emissions-info p { /* CO2 value text */
     font-size: 1.0em;
     font-weight: bold;
     color: var(--color-text-medium);
     margin: 0;
 }
 
-
+/* Circuits Panel */
 .circuits-panel {
-    width: 46%; background-color: var(--color-circuit-panel-bg);
-    border-right: 8px solid var(--color-circuit-panel-border);
+    width: 48%;                       /* Sets width, adjusted to fit with others and gaps */
+    background-color: var(--color-circuit-panel-bg); /* Specific background */
+    border-right: 8px solid var(--color-circuit-panel-border); /* Distinctive right border */
 }
-.circuits-panel h2 { color: var(--color-circuit-title); }
+.circuits-panel h2 { color: var(--color-circuit-title); } /* Specific title color */
 
+/* --- END PANEL SPECIFIC STYLING --- */
+
+
+/* --- BLOCK STYLING (Common for Power Source and Circuit items) --- */
 .block {
-    padding: 12px; margin-bottom: 15px; border-radius: 8px;
-    position: relative; box-shadow: 0 3px 6px rgba(0,0,0,0.07);
+    padding: 12px;                    /* Inner spacing */
+    margin-bottom: 15px;              /* Space below each block */
+    border-radius: 8px;               /* Rounded corners */
+    position: relative;               /* For potential child absolute positioning */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.07); /* Softer shadow for blocks */
 }
-.power-source {
-    background-color: var(--color-source-block-bg); border: 1px solid var(--color-source-block-border);
-}
-.power-source.off { opacity: 0.65; background-color: #eeeeee; }
-.power-source.off h3 { color: var(--color-text-light); }
-.power-source-icon { font-size: 1.8em; display: block; text-align: center; margin-bottom: 3px; color: var(--color-source-icon); }
-.power-source h3 { color: var(--color-source-title); }
-.power-source p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
-.power-source p.capacity-info { font-weight: 500; text-align: center; margin-bottom: 5px;}
-.power-source p.sustainability-info { font-size: 0.8em; color: var(--color-text-dark); text-align: center; font-style: italic; margin-bottom: 8px;}
 
-.circuit {
-    background-color: var(--color-circuit-block-bg); border: 1px solid var(--color-circuit-block-border);
+/* Power Source Block Styling */
+.power-source {
+    background-color: var(--color-source-block-bg);
+    border: 1px solid var(--color-source-block-border);
 }
-.circuit .circuit-header {
-    display: flex;
-    align-items: center;
+.power-source.off { /* Styling for when a power source is turned off */
+    opacity: 0.65;                    /* Makes it partially transparent */
+    background-color: #eeeeee;        /* Duller background */
+}
+.power-source.off h3 { color: var(--color-text-light); } /* Lighter title color when off */
+.power-source-icon {
+    font-size: 1.8em;                 /* Icon size */
+    display: block;                   /* Block display for centering and margins */
+    text-align: center;
+    margin-bottom: 3px;
+    color: var(--color-source-icon);
+}
+.power-source h3 { color: var(--color-source-title); } /* Title of the power source */
+.power-source p { /* General paragraph text within a power source block */
+    font-size: 0.9em;
+    color: var(--color-text-medium);
+    margin-bottom: 8px;
+}
+.power-source p.capacity-info { /* Specific styling for capacity information */
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 5px;
+}
+.power-source p.sustainability-info { /* Specific styling for sustainability/type info */
+    font-size: 0.8em;
+    color: var(--color-text-dark);
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+/* Circuit Block Styling */
+.circuit {
+    background-color: var(--color-circuit-block-bg);
+    border: 1px solid var(--color-circuit-block-border);
+}
+.circuit .circuit-header { /* Container for icon and title in a circuit block */
+    display: flex;                    /* Align icon and title horizontally */
+    align-items: center;              /* Vertically center icon and title */
     margin-bottom: 8px;
 }
 .circuit-icon {
-    font-size: 1.5em; /* Slightly larger than device icons */
-    margin-right: 10px;
+    font-size: 1.5em;
+    margin-right: 10px;               /* Space between icon and title */
     color: var(--color-circuit-icon);
 }
-.circuit h3 {
+.circuit h3 { /* Title of the circuit */
     color: var(--color-circuit-title);
-    margin: 0; /* Remove default margin if icon is next to it */
-    flex-grow: 1; /* Allow title to take remaining space */
+    margin: 0;                        /* Remove default margin */
+    flex-grow: 1;                     /* Allows title to take remaining space next to icon */
 }
-.circuit p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
-.circuit p.connection-status strong.backup { color: #ff9800; }
-.circuit p.connection-status strong.offline { color: #f44336; }
+.circuit p { /* General paragraph text within a circuit block */
+    font-size: 0.9em;
+    color: var(--color-text-medium);
+    margin-bottom: 8px;
+}
+/* Specific styling for connection status text based on source type */
+.circuit p.connection-status strong.backup { color: #ff9800; } /* Backup source active */
+.circuit p.connection-status strong.offline { color: #f44336; } /* Circuit is offline */
 
+/* --- BUTTON STYLING --- */
 button {
-    padding: 8px 15px; border: none; border-radius: 6px; color: white;
-    cursor: pointer; font-size: 0.9em; font-weight: 500;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    padding: 8px 15px;                /* Inner spacing for buttons */
+    border: none;                     /* Removes default browser border */
+    border-radius: 6px;               /* Rounded corners */
+    color: white;                     /* Default text color for buttons (often overridden by specific types) */
+    cursor: pointer;                  /* Changes cursor to a pointer on hover */
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s; /* Smooth transitions for hover/active states */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15); /* Subtle shadow */
 }
-button:hover { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-button:active { transform: translateY(0px); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+button:hover {
+    transform: translateY(-1px);      /* Lifts button slightly on hover */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Enhances shadow on hover */
+}
+button:active { /* When button is clicked */
+    transform: translateY(0px);       /* Resets lift effect */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15); /* Resets shadow */
+}
+/* Specific styles for toggle buttons based on their 'on' or 'off' class */
 button.toggle-power.on, button.toggle-device.on { background-color: var(--color-button-toggle-on); }
 button.toggle-power.off, button.toggle-device.off { background-color: var(--color-button-toggle-off); }
-button.remove-item { background-color: var(--color-button-remove); margin-left: 8px; }
-button.toggle-form-visibility { background-color: var(--color-button-neutral); width: 100%; margin-bottom: 15px; }
+button.remove-item { /* Style for 'Remove' buttons */
+    background-color: var(--color-button-remove);
+    margin-left: 8px;                 /* Space to the left if next to another button */
+}
+button.toggle-form-visibility { /* Style for buttons that show/hide forms */
+    background-color: var(--color-button-neutral);
+    width: 100%;                      /* Makes button take full width of its container */
+    margin-bottom: 15px;              /* Space below the button */
+}
 
 /* --- POWER FLOW LINES --- */
+/* Container for all animated lines */
 #linesContainer {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0;
+    position: absolute;               /* Positioned relative to the nearest positioned ancestor (body) */
+    top: 0; left: 0;                  /* Covers the entire body */
+    width: 100%; height: 100%;
+    pointer-events: none;             /* Allows clicks to pass through the lines container to elements underneath */
+    z-index: 0;                       /* Places it behind other content with higher z-index (like panels) */
+    display: block;                   /* Visible on desktop by default */
 }
+/* Individual flow line style */
 .flow-line {
-    position: absolute; background-color: var(--color-line-inactive);
-    z-index: 0; overflow: hidden; border-radius: 3px;
+    position: absolute;               /* Positioned within the linesContainer */
+    background-color: var(--color-line-inactive); /* Default color when not active */
+    z-index: 0;                       /* Behind active line animations */
+    overflow: hidden;                 /* Hides the animated pseudo-element when it's outside the line's bounds */
+    border-radius: 3px;               /* Slightly rounded ends for lines */
 }
+/* Pseudo-element used for the animated "flow" effect */
 .flow-line::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    animation-duration: 1.8s; animation-iteration-count: infinite; animation-timing-function: linear;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    content: "";                      /* Required for pseudo-elements */
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0; /* Fills the parent .flow-line */
+    animation-duration: 1.8s;         /* Duration of one animation cycle */
+    animation-iteration-count: infinite; /* Animation repeats indefinitely */
+    animation-timing-function: linear; /* Constant speed for the animation */
+    opacity: 0;                       /* Hidden by default */
+    transition: opacity 0.3s ease;    /* Smooth transition for becoming visible */
 }
+/* When a line is active, its animated pseudo-element becomes visible */
 .flow-line.active::before {
     opacity: 1;
 }
 
-.source-to-available-line { height: 8px; }
-.source-to-available-line.active::before {
+/* Styling for lines from Power Sources to Available Power panel */
+.source-to-available-line { height: 8px; } /* Thickness of the line */
+.source-to-available-line.active::before { /* Gradient and animation for active state */
     background: linear-gradient(to right, var(--color-source-line-gradient-start), var(--color-source-line-gradient-mid), var(--color-source-line-gradient-end));
-    animation-name: flowHorizontalToCenter;
+    animation-name: flowHorizontalToCenter; /* Links to the @keyframes rule */
 }
+/* Keyframe animation for the horizontal flow effect (source to available) */
 @keyframes flowHorizontalToCenter {
-    0% { transform: translateX(-110%) scaleX(1); } 50% { transform: translateX(0%) scaleX(1.1); } 100% { transform: translateX(110%) scaleX(1); }
+    0% { transform: translateX(-110%) scaleX(1); } /* Starts off-screen to the left */
+    50% { transform: translateX(0%) scaleX(1.1); } /* Reaches center, slightly scales for a pulse effect */
+    100% { transform: translateX(110%) scaleX(1); }/* Ends off-screen to the right */
 }
-.available-to-circuit-line { height: 9px; }
-.available-to-circuit-line.active::before {
+
+/* Styling for lines from Available Power panel to Circuits panel */
+.available-to-circuit-line { height: 9px; } /* Thickness of the line */
+.available-to-circuit-line.active::before { /* Gradient and animation for active state */
     background: linear-gradient(to right, var(--color-circuit-line-gradient-start), var(--color-circuit-line-gradient-mid), var(--color-circuit-line-gradient-end));
-    animation-name: flowHorizontalToCircuit;
+    animation-name: flowHorizontalToCircuit; /* Links to the @keyframes rule */
 }
+/* Keyframe animation for the horizontal flow effect (available to circuit) */
  @keyframes flowHorizontalToCircuit {
-    0% { transform: translateX(-110%); } 100% { transform: translateX(110%); }
+    0% { transform: translateX(-110%); } /* Starts off-screen to the left */
+    100% { transform: translateX(110%); }/* Ends off-screen to the right */
 }
 /* --- END POWER FLOW LINES --- */
 
-.circuit-devices { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+/* --- DEVICES WITHIN CIRCUITS --- */
+/* Grid container for devices in a circuit */
+.circuit-devices {
+    margin-top: 12px;                 /* Space above the device grid */
+    display: grid;                    /* Enables CSS Grid layout */
+    /* Creates responsive columns: as many 150px columns as fit, otherwise they stretch */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;                        /* Space between devices in the grid */
+}
+/* Individual device block styling */
 .device {
-    background-color: var(--color-device-block-bg); border: 1px solid var(--color-device-block-border);
-    border-radius: 6px; padding: 10px; text-align: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.85em;
-}
-.device-icon { font-size: 20px; margin-bottom: 4px;}
-.device-name { font-weight: 500; margin-bottom: 4px; color: var(--color-device-title); }
-.device-power-stats { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 6px; font-weight: 500;}
-
-.switch { position: relative; display: inline-block; width: 45px; height: 25px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffccbc; transition: .4s; border-radius: 25px; }
-.slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 0 2px rgba(0,0,0,0.2); }
-input:checked + .slider { background-color: var(--color-button-toggle-on); }
-input:checked + .slider:before { transform: translateX(20px); }
-input:disabled + .slider { background-color: #e0e0e0; cursor: not-allowed; }
-input:disabled + .slider:before { background-color: #f0f0f0; }
-
-.controls-form { margin-top: 10px; padding: 15px; border-radius: 8px; display: none; flex-shrink: 0; }
-.controls-form.visible { display: block; }
-.controls-form h3 { text-align: center; font-size: 1.2em; margin-bottom: 15px;}
-.controls-form label, .controls-form input, .controls-form select { display: block; margin-bottom: 8px; width: calc(100% - 20px); font-size: 0.9em;}
-.controls-form input, .controls-form select { padding: 8px; border-radius: 6px; background-color: white;}
-.controls-form button { display: block; margin: 12px auto 0; }
-
-.add-power-source-controls { border: 1px dashed var(--color-source-panel-border); background-color: var(--color-source-panel-bg); opacity: 0.95; }
-.add-power-source-controls h3 { color: var(--color-source-title); }
-.add-power-source-controls input, .add-power-source-controls select { border: 1px solid var(--color-source-block-border); }
-#addPowerSourceBtn { background-color: var(--color-source-panel-border); color: var(--color-text-dark); }
-
-.add-circuit-controls { border: 1px dashed var(--color-circuit-panel-border); background-color: var(--color-circuit-panel-bg); opacity: 0.95;}
-.add-circuit-controls h3 { color: var(--color-circuit-title); }
-.add-circuit-controls input, .add-circuit-controls select { border: 1px solid var(--color-circuit-panel-border); }
-#addCircuitBtn { background-color: var(--color-circuit-panel-border); }
-
-.power-meter-total {
-    margin-top: 20px; padding: 12px; background-color: #ede7f6;
-    border-radius: 8px; text-align: center; border: 1px solid #d1c4e9;
-    flex-shrink: 0;
-}
-.power-meter-total h3 { margin-top:0; margin-bottom: 6px; font-size: 1.1em; color: #512da8; }
-/* .meter-reading class is used in two places, ensure this is general or make specific if needed */
-/* General .meter-reading styling is fine for now */
-
-/* --- MOBILE FRIENDLY ADJUSTMENTS --- */
-/* This media query targets screens up to 768px wide (common for tablets in portrait and phones) */
-@media (max-width: 768px) {
-    body {
-        flex-direction: column; /* CHANGE: Stack panels vertically instead of side-by-side */
-        align-items: center;    /* CHANGE: Center panels horizontally */
-        padding: 10px;          /* CHANGE: Reduce overall padding for smaller screens */
-        gap: 15px;              /* CHANGE: Reduce gap between stacked panels */
-        min-height: 100vh;      /* ENSURE: Body takes at least full viewport height */
-    }
-
-    .panel {
-        width: 95%;             /* CHANGE: Panels take up most of the screen width */
-        max-width: 500px;       /* ADDED: Optional max-width to prevent panels from being too wide on larger tablets */
-        margin-bottom: 15px;    /* ADDED: Space between stacked panels */
-        overflow-y: visible;    /* CHANGE: Allow panels to grow in height; body will scroll if needed */
-        height: auto;           /* CHANGE: Let panel height be determined by its content */
-    }
-
-    /* CHANGE: Adjust panel-specific widths and borders for stacked layout */
-    .power-sources-panel,
-    .power-available-panel,
-    .circuits-panel {
-        width: 100%;            /* CHANGE: Make panels take full width relative to their container (the body or a 95% width .panel) */
-        border-left: none;      /* REMOVE: Side-specific border, not needed for stacked layout */
-        border-right: none;     /* REMOVE: Side-specific border */
-        /* ADDED: Optional: A general top border for visual separation in stacked view */
-        border-top: 5px solid transparent; /* Placeholder, specific colors below */
-    }
-    .power-sources-panel {
-        border-top-color: var(--color-source-panel-border); /* Apply specific border color */
-    }
-    .power-available-panel {
-         border-top-color: var(--color-available-panel-border); /* Apply specific border color */
-         border-width: 3px; /* Slightly thinner border for this panel if desired */
-         border-style: solid;
-    }
-    .circuits-panel {
-        border-top-color: var(--color-circuit-panel-border); /* Apply specific border color */
-    }
-
-    .panel h2 {
-        font-size: 1.2em;       /* CHANGE: Slightly smaller panel titles for mobile */
-    }
-    .power-available-panel h3 {
-        font-size: 1.15em;       /* CHANGE: Adjust heading size */
-    }
-     .power-available-panel .meter-reading {
-        font-size: 1.6em;      /* CHANGE: Adjust meter reading font size */
-    }
-    .capacity-owl {
-        font-size: 3em;         /* CHANGE: Slightly smaller owl */
-    }
-
-    .circuit-devices {
-        grid-template-columns: 1fr; /* CHANGE: Force devices into a single column layout */
-        gap: 8px;                   /* CHANGE: Reduce gap between devices */
-    }
-    .device {
-        padding: 8px;               /* CHANGE: Reduce padding within device blocks */
-    }
-
-    button {
-        padding: 10px 12px;     /* CHANGE: Slightly adjust button padding for better tap targets */
-        font-size: 0.9em;       /* CHANGE: Adjust button font size */
-    }
-    button.remove-item {
-        margin-left: 0;         /* REMOVE: Margin no longer needed if buttons stack or are centered */
-        margin-top: 8px;        /* ADDED: Add top margin if it's below another element */
-    }
-
-
-    .controls-form label,
-    .controls-form input,
-    .controls-form select {
-        width: calc(100% - 16px); /* CHANGE: Ensure form elements fit well */
-    }
-
-    /* --- POWER FLOW LINES on MOBILE --- */
-    /* CHANGE: Hide the power flow lines on mobile.
-       Their current horizontal calculation logic is complex and doesn't
-       translate well to a vertically stacked layout without significant JS changes.
-       Hiding them simplifies the mobile view while keeping core functionality. */
-    #linesContainer {
-        display: none;
-    }
-}
-
-/* This media query targets very small screens (e.g., smaller phones) */
-@media (max-width: 480px) {
-    body {
-        padding: 5px; /* CHANGE: Even less padding */
-        gap: 10px;
-    }
-    .panel {
-        padding: 10px; /* CHANGE: Reduce panel padding */
-    }
-    .panel h2 {
-        font-size: 1.1em; /* CHANGE: Further reduce heading size */
-    }
-     .power-available-panel h3 {
-        font-size: 1.05em;
-    }
-    .power-available-panel .meter-reading {
-        font-size: 1.4em; /* CHANGE: Further reduce meter font size */
-    }
-    .capacity-owl {
-        font-size: 2.8em; /* CHANGE: Further reduce owl size */
-    }
-    .block { /* General class for source/circuit blocks */
-        padding: 10px;    /* CHANGE: Reduce padding in blocks */
-    }
-    .power-source p, .circuit p {
-        font-size: 0.85em; /* CHANGE: Adjust paragraph font size in blocks */
-    }
-    .co2-emissions-info h4 {
-        font-size: 0.8em;
-    }
-    .co2-emissions-info p {
-        font-size: 0.95em;
-    }
-    button {
-        font-size: 0.85em; /* CHANGE: Further reduce button font size */
-    }
-}/* --- COLOUR PALETTE VARIABLES (Easy to change!) --- */
-:root {
-    --color-background: #e0f7fa; /* Light Cyan page background */
-    --color-panel-bg: #ffffff;    /* White for main panels */
-    --color-text-dark: #333333;
-    --color-text-medium: #555555;
-    --color-text-light: #777777;
-
-    --color-source-panel-bg: #fffde7; /* Light Yellow for power source panel */
-    --color-source-panel-border: #fdd835; /* Bright Yellow border */
-    --color-source-block-bg: #fff9c4;
-    --color-source-block-border: #fbc02d;
-    --color-source-title: #d84315; /* Deep Orange for source titles */
-    --color-source-icon: #f57f17;
-    --color-source-line-gradient-start: #fdd835;
-    --color-source-line-gradient-mid: #ffb300;
-    --color-source-line-gradient-end: #fdd835;
-
-
-    --color-available-panel-bg: #e1f5fe; /* Light Blue for available power panel */
-    --color-available-panel-border: #4fc3f7; /* Bright Blue border */
-    --color-available-title: #0277bd;
-    --color-available-meter-text: #01579b;
-
-    --color-circuit-panel-bg: #fce4ec; /* Light Pink for circuits panel */
-    --color-circuit-panel-border: #f06292; /* Bright Pink border */
-    --color-circuit-block-bg: #f9f9f9;
-    --color-circuit-block-border: #e8e8e8;
-    --color-circuit-title: #6a1b9a;
-    --color-circuit-icon: #8e24aa; /* Purple for circuit icons */
-    --color-circuit-line-gradient-start: #ffeb3b;
-    --color-circuit-line-gradient-mid: #ffc107;
-    --color-circuit-line-gradient-end: #ffeb3b;
-
-
-    --color-device-block-bg: #dcedc8;
-    --color-device-block-border: #a5d6a7;
-    --color-device-title: #388e3c;
-
-    --color-line-inactive: #78909c; /* Darker Grey Blue for inactive lines */
-    --color-button-toggle-on: #66bb6a;
-    --color-button-toggle-off: #ef5350;
-    --color-button-neutral: #90a4ae;
-    --color-button-remove: #78909c;
-    --color-button-simulation: #ff9800;   /* Orange for simulation button */
-
-    --font-primary: 'Roboto', sans-serif;
-}
-/* --- END COLOUR PALETTE --- */
-
-body {
-    font-family: var(--font-primary);
-    margin: 0; padding: 20px; background-color: var(--color-background);
-    display: flex; justify-content: space-between; min-height: calc(100vh - 40px); gap: 20px;
-    box-sizing: border-box; /* Ensures padding doesn't add to total width/height */
-}
-
-.panel {
-    background-color: var(--color-panel-bg); padding: 20px; border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow-y: auto; position: relative;
-    display: flex; flex-direction: column;
-}
-.panel h2 {
-    color: var(--color-text-dark); text-align: center; font-weight: 700;
-    border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 0;
-    font-size: 1.4em; flex-shrink: 0;
-}
-.panel-content { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
-
-.power-sources-panel {
-    width: 30%; background-color: var(--color-source-panel-bg);
-    border-left: 8px solid var(--color-source-panel-border);
-}
-.power-sources-panel h2 { color: var(--color-source-title); }
-
-.power-available-panel {
-    width: 20%; background-color: var(--color-available-panel-bg);
-    border: 5px solid var(--color-available-panel-border);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: space-around; /* Distribute space for owl */ text-align: center; z-index: 1;
-}
-.power-available-panel h3 { color: var(--color-available-title); font-size: 1.3em; margin-bottom: 5px; font-weight: 700;}
-.power-available-panel .meter-reading {
-    font-size: 1.8em; font-weight: 700; color: var(--color-available-meter-text);
-    padding: 6px 12px; background-color: var(--color-panel-bg);
-    border-radius: 8px; box-shadow: inset 0 0 8px rgba(0,0,0,0.1); margin-bottom: 5px;
-}
-.power-available-panel p.description { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 10px;}
-/* Capacity Owl Styling */
-.capacity-owl-container {
-    margin-top: 10px;
-    text-align: center;
-}
-.capacity-owl {
-    font-size: 3.5em; /* Large owl emoji */
-    display: block;
-    margin-bottom: 5px;
-    transition: transform 0.3s ease-in-out;
-}
-.capacity-owl-status {
-    font-size: 0.9em;
-    font-weight: bold;
-    color: var(--color-available-title);
-}
-/* CO2 Emissions Styling */
-.co2-emissions-info {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
+    background-color: var(--color-device-block-bg);
+    border: 1px solid var(--color-device-block-border);
     border-radius: 6px;
-    text-align: center;
-    width: 90%;
-    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;               /* Centers content within the device block */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Very subtle shadow */
+    font-size: 0.85em;
 }
-.co2-emissions-info h4 {
-    margin: 0 0 5px 0;
-    font-size: 0.9em;
-    color: var(--color-text-dark);
+.device-icon { font-size: 20px; margin-bottom: 4px; } /* Icon for the device */
+.device-name { font-weight: 500; margin-bottom: 4px; color: var(--color-device-title); } /* Name of the device */
+.device-power-stats { /* Power consumption stats for the device */
+    font-size: 0.8em;
+    color: var(--color-text-medium);
+    margin-bottom: 6px;
     font-weight: 500;
 }
-.co2-emissions-info p {
-    font-size: 1.0em;
-    font-weight: bold;
-    color: var(--color-text-medium);
-    margin: 0;
-}
 
-
-.circuits-panel {
-    width: 46%; background-color: var(--color-circuit-panel-bg);
-    border-right: 8px solid var(--color-circuit-panel-border);
+/* --- TOGGLE SWITCH STYLING (for devices) --- */
+.switch { /* Container for the checkbox and slider */
+    position: relative;
+    display: inline-block;            /* Allows it to sit inline with other elements but have width/height */
+    width: 45px; height: 25px;
 }
-.circuits-panel h2 { color: var(--color-circuit-title); }
-
-.block {
-    padding: 12px; margin-bottom: 15px; border-radius: 8px;
-    position: relative; box-shadow: 0 3px 6px rgba(0,0,0,0.07);
-}
-.power-source {
-    background-color: var(--color-source-block-bg); border: 1px solid var(--color-source-block-border);
-}
-.power-source.off { opacity: 0.65; background-color: #eeeeee; }
-.power-source.off h3 { color: var(--color-text-light); }
-.power-source-icon { font-size: 1.8em; display: block; text-align: center; margin-bottom: 3px; color: var(--color-source-icon); }
-.power-source h3 { color: var(--color-source-title); }
-.power-source p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
-.power-source p.capacity-info { font-weight: 500; text-align: center; margin-bottom: 5px;}
-.power-source p.sustainability-info { font-size: 0.8em; color: var(--color-text-dark); text-align: center; font-style: italic; margin-bottom: 8px;}
-
-.circuit {
-    background-color: var(--color-circuit-block-bg); border: 1px solid var(--color-circuit-block-border);
-}
-.circuit .circuit-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-}
-.circuit-icon {
-    font-size: 1.5em; /* Slightly larger than device icons */
-    margin-right: 10px;
-    color: var(--color-circuit-icon);
-}
-.circuit h3 {
-    color: var(--color-circuit-title);
-    margin: 0; /* Remove default margin if icon is next to it */
-    flex-grow: 1; /* Allow title to take remaining space */
-}
-.circuit p { font-size: 0.9em; color: var(--color-text-medium); margin-bottom: 8px;}
-.circuit p.connection-status strong.backup { color: #ff9800; }
-.circuit p.connection-status strong.offline { color: #f44336; }
-
-button {
-    padding: 8px 15px; border: none; border-radius: 6px; color: white;
-    cursor: pointer; font-size: 0.9em; font-weight: 500;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-}
-button:hover { transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-button:active { transform: translateY(0px); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-button.toggle-power.on, button.toggle-device.on { background-color: var(--color-button-toggle-on); }
-button.toggle-power.off, button.toggle-device.off { background-color: var(--color-button-toggle-off); }
-button.remove-item { background-color: var(--color-button-remove); margin-left: 8px; }
-button.toggle-form-visibility { background-color: var(--color-button-neutral); width: 100%; margin-bottom: 15px; }
-
-/* --- POWER FLOW LINES --- */
-#linesContainer {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0;
-}
-.flow-line {
-    position: absolute; background-color: var(--color-line-inactive);
-    z-index: 0; overflow: hidden; border-radius: 3px;
-}
-.flow-line::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    animation-duration: 1.8s; animation-iteration-count: infinite; animation-timing-function: linear;
+.switch input { /* The actual checkbox, hidden visually */
     opacity: 0;
-    transition: opacity 0.3s ease;
+    width: 0; height: 0;
 }
-.flow-line.active::before {
-    opacity: 1;
+.slider { /* The visual part of the switch (the track) */
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0; /* Fills the .switch container */
+    background-color: #ffccbc;        /* Default background (off state for some themes) */
+    transition: .4s;                  /* Smooth transition for color/transform changes */
+    border-radius: 25px;              /* Makes the track pill-shaped */
 }
-
-.source-to-available-line { height: 8px; }
-.source-to-available-line.active::before {
-    background: linear-gradient(to right, var(--color-source-line-gradient-start), var(--color-source-line-gradient-mid), var(--color-source-line-gradient-end));
-    animation-name: flowHorizontalToCenter;
+.slider:before { /* The visual part of the switch (the knob/handle) */
+    position: absolute;
+    content: "";
+    height: 17px; width: 17px;
+    left: 4px; bottom: 4px;           /* Positioning within the slider track */
+    background-color: white;
+    transition: .4s;                  /* Smooth transition for movement */
+    border-radius: 50%;               /* Makes the knob circular */
+    box-shadow: 0 0 2px rgba(0,0,0,0.2); /* Subtle shadow for the knob */
 }
-@keyframes flowHorizontalToCenter {
-    0% { transform: translateX(-110%) scaleX(1); } 50% { transform: translateX(0%) scaleX(1.1); } 100% { transform: translateX(110%) scaleX(1); }
-}
-.available-to-circuit-line { height: 9px; }
-.available-to-circuit-line.active::before {
-    background: linear-gradient(to right, var(--color-circuit-line-gradient-start), var(--color-circuit-line-gradient-mid), var(--color-circuit-line-gradient-end));
-    animation-name: flowHorizontalToCircuit;
-}
- @keyframes flowHorizontalToCircuit {
-    0% { transform: translateX(-110%); } 100% { transform: translateX(110%); }
-}
-/* --- END POWER FLOW LINES --- */
-
-.circuit-devices { margin-top: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-.device {
-    background-color: var(--color-device-block-bg); border: 1px solid var(--color-device-block-border);
-    border-radius: 6px; padding: 10px; text-align: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.85em;
-}
-.device-icon { font-size: 20px; margin-bottom: 4px;}
-.device-name { font-weight: 500; margin-bottom: 4px; color: var(--color-device-title); }
-.device-power-stats { font-size: 0.8em; color: var(--color-text-medium); margin-bottom: 6px; font-weight: 500;}
-
-.switch { position: relative; display: inline-block; width: 45px; height: 25px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffccbc; transition: .4s; border-radius: 25px; }
-.slider:before { position: absolute; content: ""; height: 17px; width: 17px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 0 2px rgba(0,0,0,0.2); }
+/* When the checkbox is checked, change the slider's background */
 input:checked + .slider { background-color: var(--color-button-toggle-on); }
+/* When the checkbox is checked, move the slider's knob to the right */
 input:checked + .slider:before { transform: translateX(20px); }
-input:disabled + .slider { background-color: #e0e0e0; cursor: not-allowed; }
-input:disabled + .slider:before { background-color: #f0f0f0; }
-
-.controls-form { margin-top: 10px; padding: 15px; border-radius: 8px; display: none; flex-shrink: 0; }
-.controls-form.visible { display: block; }
-.controls-form h3 { text-align: center; font-size: 1.2em; margin-bottom: 15px;}
-.controls-form label, .controls-form input, .controls-form select { display: block; margin-bottom: 8px; width: calc(100% - 20px); font-size: 0.9em;}
-.controls-form input, .controls-form select { padding: 8px; border-radius: 6px; background-color: white;}
-.controls-form button { display: block; margin: 12px auto 0; }
-
-.add-power-source-controls { border: 1px dashed var(--color-source-panel-border); background-color: var(--color-source-panel-bg); opacity: 0.95; }
-.add-power-source-controls h3 { color: var(--color-source-title); }
-.add-power-source-controls input, .add-power-source-controls select { border: 1px solid var(--color-source-block-border); }
-#addPowerSourceBtn { background-color: var(--color-source-panel-border); color: var(--color-text-dark); }
-
-.add-circuit-controls { border: 1px dashed var(--color-circuit-panel-border); background-color: var(--color-circuit-panel-bg); opacity: 0.95;}
-.add-circuit-controls h3 { color: var(--color-circuit-title); }
-.add-circuit-controls input, .add-circuit-controls select { border: 1px solid var(--color-circuit-panel-border); }
-#addCircuitBtn { background-color: var(--color-circuit-panel-border); }
-
-.power-meter-total {
-    margin-top: 20px; padding: 12px; background-color: #ede7f6;
-    border-radius: 8px; text-align: center; border: 1px solid #d1c4e9;
-    flex-shrink: 0;
+/* Styling for disabled switch state */
+input:disabled + .slider {
+    background-color: #e0e0e0;        /* Greyed-out track */
+    cursor: not-allowed;              /* Indicates it's not interactive */
 }
-.power-meter-total h3 { margin-top:0; margin-bottom: 6px; font-size: 1.1em; color: #512da8; }
-/* .meter-reading class is used in two places, ensure this is general or make specific if needed */
-/* General .meter-reading styling is fine for now */
+input:disabled + .slider:before { background-color: #f0f0f0; } /* Lighter knob when disabled */
 
-/* --- MOBILE FRIENDLY ADJUSTMENTS --- */
+/* --- FORMS STYLING (for adding power sources/circuits) --- */
+.controls-form {
+    margin-top: 10px;                 /* Space above the form */
+    padding: 15px;
+    border-radius: 8px;
+    display: none;                    /* Hidden by default, shown by JavaScript */
+    flex-shrink: 0;                   /* Prevents forms from shrinking if panel space is tight, maintaining their defined size */
+}
+.controls-form.visible { display: block; } /* Class added by JS to show the form */
+.controls-form h3 { /* Title within the form */
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+/* Labels, inputs, and selects within the forms */
+.controls-form label, .controls-form input, .controls-form select {
+    display: block;                   /* Makes each take up its own line */
+    margin-bottom: 8px;               /* Space below each form element */
+    width: calc(100% - 20px);         /* Full width minus some padding */
+    font-size: 0.9em;
+}
+.controls-form input, .controls-form select { /* Specific styling for input fields and select dropdowns */
+    padding: 8px;
+    border-radius: 6px;
+    background-color: white;
+}
+.controls-form button { /* Button within the form (e.g., "Add Unit") */
+    display: block;                   /* Makes button block-level */
+    margin: 12px auto 0;              /* Centers button with top margin */
+}
+
+/* Specific styling for "Add Power Source" form */
+.add-power-source-controls {
+    border: 1px dashed var(--color-source-panel-border); /* Dashed border using source panel color */
+    background-color: var(--color-source-panel-bg);
+    opacity: 0.95;                    /* Slightly transparent */
+}
+.add-power-source-controls h3 { color: var(--color-source-title); }
+.add-power-source-controls input, .add-power-source-controls select {
+    border: 1px solid var(--color-source-block-border); /* Border matching source blocks */
+}
+#addPowerSourceBtn { /* The "Add Unit" button itself */
+    background-color: var(--color-source-panel-border); /* Button color matches source panel border */
+    color: var(--color-text-dark);    /* Dark text for readability on yellow button */
+}
+
+/* Specific styling for "Add Circuit" form */
+.add-circuit-controls {
+    border: 1px dashed var(--color-circuit-panel-border); /* Dashed border using circuit panel color */
+    background-color: var(--color-circuit-panel-bg);
+    opacity: 0.95;
+}
+.add-circuit-controls h3 { color: var(--color-circuit-title); }
+.add-circuit-controls input, .add-circuit-controls select {
+    border: 1px solid var(--color-circuit-panel-border); /* Border matching circuit panel border */
+}
+#addCircuitBtn { /* The "Add Zone" button itself */
+    background-color: var(--color-circuit-panel-border); /* Button color matches circuit panel border */
+    /* Text color defaults to white from general button style, which is fine on pink */
+}
+
+/* --- TOTAL POWER METER (in Circuits Panel) --- */
+.power-meter-total {
+    margin-top: auto;                 /* Pushes this block to the bottom of its flex container (.circuits-panel) if space allows */
+    padding: 12px;
+    background-color: #ede7f6;        /* Distinct background color */
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #d1c4e9;
+    flex-shrink: 0;                   /* Prevents this block from shrinking */
+}
+.power-meter-total h3 {
+    margin-top:0; margin-bottom: 6px;
+    font-size: 1.1em;
+    color: #512da8;                   /* Specific color for this heading */
+}
+/* General .meter-reading class is used for this as well, shared style with available panel meter */
+
+
+/* --- MOBILE FRIENDLY ADJUSTMENTS (Media Queries) --- */
 /* This media query targets screens up to 768px wide (common for tablets in portrait and phones) */
 @media (max-width: 768px) {
     body {
-        flex-direction: column; /* CHANGE: Stack panels vertically instead of side-by-side */
-        align-items: center;    /* CHANGE: Center panels horizontally */
-        padding: 10px;          /* CHANGE: Reduce overall padding for smaller screens */
-        gap: 15px;              /* CHANGE: Reduce gap between stacked panels */
-        min-height: 100vh;      /* ENSURE: Body takes at least full viewport height */
+        flex-direction: column;           /* STACK: Panels vertically instead of side-by-side */
+        align-items: center;              /* Center stacked panels horizontally */
+        padding: 10px;                    /* ADJUST: Reduce overall page padding */
+        gap: 15px;                        /* ADJUST: Reduce gap between stacked panels */
+        height: auto;                     /* ALLOW_GROW: Body height determined by content, allows scrolling */
+        overflow: auto;                   /* ENABLE_SCROLL: Page can scroll if content exceeds viewport height */
     }
 
     .panel {
-        width: 95%;             /* CHANGE: Panels take up most of the screen width */
-        max-width: 500px;       /* ADDED: Optional max-width to prevent panels from being too wide on larger tablets */
-        margin-bottom: 15px;    /* ADDED: Space between stacked panels */
-        overflow-y: visible;    /* CHANGE: Allow panels to grow in height; body will scroll if needed */
-        height: auto;           /* CHANGE: Let panel height be determined by its content */
+        width: 95% !important;            /* FULL_WIDTH: Panels take up most of the screen width, !important to override desktop styles */
+        max-width: 500px;                 /* MAX_WIDTH_MOBILE: Prevents panels being too wide on larger tablets */
+        margin-bottom: 15px;              /* SPACING: Space between stacked panels */
+        height: auto;                     /* CONTENT_HEIGHT: Panel height determined by its content */
+        max-height: none;                 /* REMOVE_CONSTRAINT: No fixed max height from desktop */
+    }
+    .panel-content {
+        overflow-y: visible;              /* NO_INTERNAL_SCROLL: Panel content doesn't scroll internally; the whole page scrolls */
     }
 
-    /* CHANGE: Adjust panel-specific widths and borders for stacked layout */
+    /* ADJUST_BORDERS: Remove side-specific borders and apply top borders for visual separation in stacked layout */
     .power-sources-panel,
     .power-available-panel,
     .circuits-panel {
-        width: 100%;            /* CHANGE: Make panels take full width relative to their container (the body or a 95% width .panel) */
-        border-left: none;      /* REMOVE: Side-specific border, not needed for stacked layout */
-        border-right: none;     /* REMOVE: Side-specific border */
-        /* ADDED: Optional: A general top border for visual separation in stacked view */
+        border-left: none;
+        border-right: none;
         border-top: 5px solid transparent; /* Placeholder, specific colors below */
     }
-    .power-sources-panel {
-        border-top-color: var(--color-source-panel-border); /* Apply specific border color */
-    }
+    .power-sources-panel { border-top-color: var(--color-source-panel-border); }
     .power-available-panel {
-         border-top-color: var(--color-available-panel-border); /* Apply specific border color */
-         border-width: 3px; /* Slightly thinner border for this panel if desired */
-         border-style: solid;
+        border-top-color: var(--color-available-panel-border);
+        /* Only top border, remove others from desktop full border */
+        border-width: 3px 0 0 0;
+        border-style: solid;
     }
-    .circuits-panel {
-        border-top-color: var(--color-circuit-panel-border); /* Apply specific border color */
-    }
+    .circuits-panel { border-top-color: var(--color-circuit-panel-border); }
 
-    .panel h2 {
-        font-size: 1.2em;       /* CHANGE: Slightly smaller panel titles for mobile */
-    }
-    .power-available-panel h3 {
-        font-size: 1.15em;       /* CHANGE: Adjust heading size */
-    }
-     .power-available-panel .meter-reading {
-        font-size: 1.6em;      /* CHANGE: Adjust meter reading font size */
-    }
-    .capacity-owl {
-        font-size: 3em;         /* CHANGE: Slightly smaller owl */
-    }
+    /* ADJUST_FONTS: Slightly smaller panel titles and other text for mobile */
+    .panel h2 { font-size: 1.2em; }
+    .power-available-panel h3 { font-size: 1.15em; }
+    .power-available-panel .meter-reading { font-size: 1.6em; }
+    .capacity-owl { font-size: 3em; }
 
-    .circuit-devices {
-        grid-template-columns: 1fr; /* CHANGE: Force devices into a single column layout */
-        gap: 8px;                   /* CHANGE: Reduce gap between devices */
-    }
-    .device {
-        padding: 8px;               /* CHANGE: Reduce padding within device blocks */
-    }
+    /* SINGLE_COLUMN_DEVICES: Force devices within circuits into a single column */
+    .circuit-devices { grid-template-columns: 1fr; gap: 8px; }
+    .device { padding: 8px; } /* ADJUST_PADDING: Reduce padding in device blocks */
 
-    button {
-        padding: 10px 12px;     /* CHANGE: Slightly adjust button padding for better tap targets */
-        font-size: 0.9em;       /* CHANGE: Adjust button font size */
-    }
-    button.remove-item {
-        margin-left: 0;         /* REMOVE: Margin no longer needed if buttons stack or are centered */
-        margin-top: 8px;        /* ADDED: Add top margin if it's below another element */
-    }
+    /* TAP_TARGETS: Adjust button padding for better touch interaction */
+    button { padding: 10px 12px; font-size: 0.9em; }
+    button.remove-item { margin-left: 0; margin-top: 8px; } /* ADJUST_MARGIN: For stacked layout */
 
-
+    /* FORM_ELEMENTS_FIT: Ensure form inputs fit well on smaller screens */
     .controls-form label,
     .controls-form input,
-    .controls-form select {
-        width: calc(100% - 16px); /* CHANGE: Ensure form elements fit well */
-    }
+    .controls-form select { width: calc(100% - 16px); }
 
-    /* --- POWER FLOW LINES on MOBILE --- */
-    /* CHANGE: Hide the power flow lines on mobile.
-       Their current horizontal calculation logic is complex and doesn't
-       translate well to a vertically stacked layout without significant JS changes.
-       Hiding them simplifies the mobile view while keeping core functionality. */
+    /* HIDE_LINES: Power flow lines are designed for horizontal layout and are hidden on mobile */
     #linesContainer {
         display: none;
     }
 }
 
-/* This media query targets very small screens (e.g., smaller phones) */
+/* This media query targets very small screens (e.g., smaller phones, less than 480px wide) */
 @media (max-width: 480px) {
-    body {
-        padding: 5px; /* CHANGE: Even less padding */
-        gap: 10px;
-    }
-    .panel {
-        padding: 10px; /* CHANGE: Reduce panel padding */
-    }
-    .panel h2 {
-        font-size: 1.1em; /* CHANGE: Further reduce heading size */
-    }
-     .power-available-panel h3 {
-        font-size: 1.05em;
-    }
-    .power-available-panel .meter-reading {
-        font-size: 1.4em; /* CHANGE: Further reduce meter font size */
-    }
-    .capacity-owl {
-        font-size: 2.8em; /* CHANGE: Further reduce owl size */
-    }
-    .block { /* General class for source/circuit blocks */
-        padding: 10px;    /* CHANGE: Reduce padding in blocks */
-    }
-    .power-source p, .circuit p {
-        font-size: 0.85em; /* CHANGE: Adjust paragraph font size in blocks */
-    }
-    .co2-emissions-info h4 {
-        font-size: 0.8em;
-    }
-    .co2-emissions-info p {
-        font-size: 0.95em;
-    }
-    button {
-        font-size: 0.85em; /* CHANGE: Further reduce button font size */
-    }
+    /* FURTHER_REDUCE_SPACING_AND_FONTS for very small screens */
+    body { padding: 5px; gap: 10px; }
+    .panel { padding: 10px; }
+    .panel h2 { font-size: 1.1em; }
+    .power-available-panel h3 { font-size: 1.05em; }
+    .power-available-panel .meter-reading { font-size: 1.4em; }
+    .capacity-owl { font-size: 2.8em; }
+    .block { padding: 10px; } /* General class for source/circuit blocks */
+    .power-source p, .circuit p { font-size: 0.85em; }
+    .co2-emissions-info h4 { font-size: 0.8em; }
+    .co2-emissions-info p { font-size: 0.95em; }
+    button { font-size: 0.85em; }
 }
